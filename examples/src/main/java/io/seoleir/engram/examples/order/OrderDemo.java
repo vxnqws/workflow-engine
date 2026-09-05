@@ -1,71 +1,82 @@
 package io.seoleir.engram.examples.order;
 
-import io.seoleir.engram.backendmemory.InMemoryEventLog;
-import io.seoleir.engram.backendmemory.InMemoryStateStore;
+import io.seoleir.engram.backend.memory.InMemoryEventLog;
+import io.seoleir.engram.backend.memory.InMemoryStateStore;
+import io.seoleir.engram.client.EngramClient;
 import io.seoleir.engram.codeccbor.CborCodec;
-import io.seoleir.engram.core.codec.StateCodec;
-import io.seoleir.engram.examples.order.decider.OrderDecider;
+import io.seoleir.engram.core.internal.codec.StateCodec;
 import io.seoleir.engram.examples.order.model.EventTypes;
 import io.seoleir.engram.examples.order.model.State;
 import io.seoleir.engram.examples.order.payload.ChargeResult;
 import io.seoleir.engram.examples.order.payload.OrderPlaced;
 import io.seoleir.engram.examples.order.payload.ReserveResult;
-import io.seoleir.engram.runtime.Coordinator;
+import io.seoleir.engram.examples.order.workflow.OrderWorkflow;
 import io.seoleir.engram.spi.EventLog;
 import io.seoleir.engram.spi.StateStore;
 
+import java.util.List;
+
 public class OrderDemo {
+
+    private static final String WORKFLOW_ID = "o-42";
+    private static final String WORKFLOW_TYPE = "OrderWorkflow";
+
     public static void main(String[] args) {
         StateCodec codec = new CborCodec();
         EventLog log = new InMemoryEventLog();
         StateStore store = new InMemoryStateStore(codec);
 
-        Coordinator<State> coordinator = new Coordinator<>(log, store, new OrderDecider(codec), State.class, State.initial());
+        EngramClient engram = EngramClient.builder()
+                .codec(codec)
+                .eventLog(log)
+                .stateStore(store)
+                .register(OrderWorkflow.class, new OrderWorkflow(), State.initial())
+                .build();
 
-        String workflowId = "o-42";
+        System.out.println("=== Live execution ===");
 
-        System.out.println("=== Живое исполнение ===");
+        run(engram, store, EventTypes.ORDER_PLACED, codec.encode(new OrderPlaced("order-1", "cust-7")));
+        run(engram, store, EventTypes.RESERVE_COMPLETED, codec.encode(new ReserveResult("r-88")));
+        run(engram, store, EventTypes.CHARGE_COMPLETED, codec.encode(new ChargeResult("p-7", 149_900L)));
 
-        var commands = coordinator.handle(workflowId, EventTypes.ORDER_PLACED,
-                codec.encode(new OrderPlaced("order-1", "cust-7")));
-        print(store, workflowId, commands);
+        State live = (State) store.load(WORKFLOW_ID).state();
 
-        commands = coordinator.handle(workflowId, EventTypes.RESERVE_COMPLETED,
-                codec.encode(new ReserveResult("r-88")));
-        print(store, workflowId, commands);
+        System.out.println("\n=== Unknown event is ignored ===");
+        var before = store.load(WORKFLOW_ID).state();
+        run(engram, store, "SomeRemovedEventType", new byte[0]);
+        var after = store.load(WORKFLOW_ID).state();
+        System.out.println("State unchanged: " + before.equals(after));
 
-        commands = coordinator.handle(workflowId, EventTypes.CHARGE_COMPLETED,
-                codec.encode(new ChargeResult("p-7", 149_900L)));
-        print(store, workflowId, commands);
-
-        var live = store.load(workflowId).state();
-
-        System.out.println("\n=== Краш: состояние потеряно, лог цел ===");
+        System.out.println("\n=== Crash: state lost, log intact ===");
 
         StateStore freshStore = new InMemoryStateStore(codec);
-        var recovered = new Coordinator<>(
-                log, freshStore, new OrderDecider(codec), State.class, State.initial());
+        EngramClient recoveredEngram = EngramClient.builder()
+                .codec(codec)
+                .eventLog(log)
+                .stateStore(freshStore)
+                .register(OrderWorkflow.class, new OrderWorkflow(), State.initial())
+                .build();
 
-        recovered.handle(workflowId, "Noop", new byte[0]);
+        run(engram, store, "Noop", new byte[0]);
 
-        var restored = freshStore.load(workflowId).state();
+        State restored = (State) freshStore.load(WORKFLOW_ID).state();
 
-        System.out.println("Живое:          " + live);
-        System.out.println("Восстановленное: " + restored);
-        System.out.println("Совпало: " + statesEqual(live, restored));
+        System.out.println("Live:      " + live);
+        System.out.println("Recovered: " + restored);
+        System.out.println("Match:     " + live.equals(restored));
+
+        System.out.println("\n=== Builder validation ===");
+        try {
+            EngramClient.builder().codec(codec).eventLog(log).stateStore(store).build();
+        } catch (IllegalStateException e) {
+            System.out.println("Caught as expected: " + e.getMessage());
+        }
     }
 
-    private static void print(StateStore store, String workflowId, java.util.List<String> commands) {
-        var vs = store.load(workflowId);
+    private static void run(EngramClient engramClient, StateStore store, String eventType, byte[] payload) {
+        List<String> commands = engramClient.handle(WORKFLOW_TYPE, WORKFLOW_ID, eventType, payload);
+        var vs = store.load(WORKFLOW_ID);
         System.out.printf("seq=%d version=%d state=%s commands=%s%n",
                 vs.lastSequence(), vs.version(), vs.state(), commands);
     }
-
-    private static boolean statesEqual(Object live, Object restored) {
-        if (!(live instanceof State a) || !(restored instanceof State b)) return false;
-        return a.status() == b.status()
-                && java.util.Objects.equals(a.reservationId(), b.reservationId())
-                && java.util.Objects.equals(a.paymentId(), b.paymentId());
-    }
-
 }

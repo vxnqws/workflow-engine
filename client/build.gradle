@@ -4,7 +4,7 @@ plugins {
 
 group = 'io.seoleir.engram'
 version = '0.0.1-SNAPSHOT'
-description = 'runtime'
+description = 'client'
 
 java {
     toolchain {
@@ -19,4 +19,5 @@ repositories {
 dependencies {
     api project(':core')
     api project(':spi')
+    implementation project(':runtime')
 }

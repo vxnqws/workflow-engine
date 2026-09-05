@@ -6,5 +6,6 @@ include(
         "runtime",
         "codec-cbor",
         "backend-memory",
+        "client",
         "examples"
 )

@@ -1,7 +1,9 @@
 package io.seoleir.engram.examples.order.model;
 
-import io.seoleir.engram.core.state.WorkflowState;
+import io.seoleir.engram.core.api.annotation.WorkflowStateType;
+import io.seoleir.engram.core.api.state.WorkflowState;
 
+@WorkflowStateType(schemaVersion = 1)
 public record State(
         Status status,
         String reservationId,

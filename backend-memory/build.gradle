@@ -1,5 +1,4 @@
 plugins {
-    id 'java'
     id 'java-library'
 }
 
@@ -18,5 +17,5 @@ repositories {
 }
 
 dependencies {
-    api project(':spi')
+    implementation project(':spi')
 }

@@ -1,6 +1,6 @@
 package io.seoleir.engram.spi;
 
-import io.seoleir.engram.core.event.HistoryEvent;
+import io.seoleir.engram.core.internal.event.HistoryEvent;
 
 import java.util.List;
 
