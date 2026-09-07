@@ -1,7 +1,6 @@
-package io.seoleir.engram.core.internal.event;
+package io.seoleir.engram.core.event;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Objects;
 
 public record HistoryEvent (

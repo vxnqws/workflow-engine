@@ -1,7 +1,7 @@
 package io.seoleir.engram.backend.memory;
 
-import io.seoleir.engram.core.internal.codec.StateCodec;
-import io.seoleir.engram.core.api.state.WorkflowState;
+import io.seoleir.engram.api.state.WorkflowState;
+import io.seoleir.engram.core.codec.StateCodec;
 import io.seoleir.engram.spi.StateStore;
 import io.seoleir.engram.spi.exception.OptimisticLockException;
 import io.seoleir.engram.spi.state.VersionedState;

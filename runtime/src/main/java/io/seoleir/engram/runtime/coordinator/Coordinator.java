@@ -1,10 +1,10 @@
 package io.seoleir.engram.runtime.coordinator;
 
-import io.seoleir.engram.core.internal.decide.Decider;
-import io.seoleir.engram.core.internal.decide.Replayer;
-import io.seoleir.engram.core.internal.event.HistoryEvent;
-import io.seoleir.engram.core.api.state.Decision;
-import io.seoleir.engram.core.api.state.WorkflowState;
+import io.seoleir.engram.api.state.Decision;
+import io.seoleir.engram.api.state.WorkflowState;
+import io.seoleir.engram.core.decide.Decider;
+import io.seoleir.engram.core.decide.Replayer;
+import io.seoleir.engram.core.event.HistoryEvent;
 import io.seoleir.engram.spi.EventLog;
 import io.seoleir.engram.spi.StateStore;
 import io.seoleir.engram.spi.exception.ConcurrencyException;

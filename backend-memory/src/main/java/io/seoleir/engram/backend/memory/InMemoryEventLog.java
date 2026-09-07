@@ -1,6 +1,6 @@
 package io.seoleir.engram.backend.memory;
 
-import io.seoleir.engram.core.internal.event.HistoryEvent;
+import io.seoleir.engram.core.event.HistoryEvent;
 import io.seoleir.engram.spi.EventLog;
 import io.seoleir.engram.spi.exception.SequenceConflictException;
 

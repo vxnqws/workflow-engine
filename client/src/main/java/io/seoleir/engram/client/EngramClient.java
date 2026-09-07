@@ -1,7 +1,7 @@
 package io.seoleir.engram.client;
 
-import io.seoleir.engram.core.api.state.WorkflowState;
-import io.seoleir.engram.core.internal.codec.StateCodec;
+import io.seoleir.engram.api.state.WorkflowState;
+import io.seoleir.engram.core.codec.StateCodec;
 import io.seoleir.engram.runtime.adapter.AnnotatedDecider;
 import io.seoleir.engram.runtime.coordinator.Coordinator;
 import io.seoleir.engram.runtime.registry.Registry;

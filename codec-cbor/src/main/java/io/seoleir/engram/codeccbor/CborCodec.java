@@ -1,7 +1,7 @@
 package io.seoleir.engram.codeccbor;
 
 import io.seoleir.engram.codeccbor.exception.SerializationException;
-import io.seoleir.engram.core.internal.codec.StateCodec;
+import io.seoleir.engram.core.codec.StateCodec;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.MapperFeature;
 import tools.jackson.databind.SerializationFeature;

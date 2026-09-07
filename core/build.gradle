@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
 }
 
 group = 'io.seoleir.engram'
@@ -17,4 +17,5 @@ repositories {
 }
 
 dependencies {
+    api project(':api')
 }

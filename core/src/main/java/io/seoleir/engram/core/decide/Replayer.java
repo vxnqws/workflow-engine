@@ -1,7 +1,7 @@
-package io.seoleir.engram.core.internal.decide;
+package io.seoleir.engram.core.decide;
 
-import io.seoleir.engram.core.internal.event.HistoryEvent;
-import io.seoleir.engram.core.api.state.WorkflowState;
+import io.seoleir.engram.api.state.WorkflowState;
+import io.seoleir.engram.core.event.HistoryEvent;
 
 import java.util.List;
 

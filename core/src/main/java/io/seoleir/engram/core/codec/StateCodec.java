@@ -1,4 +1,4 @@
-package io.seoleir.engram.core.internal.codec;
+package io.seoleir.engram.core.codec;
 
 public interface StateCodec {
     byte[] encode(Object value);

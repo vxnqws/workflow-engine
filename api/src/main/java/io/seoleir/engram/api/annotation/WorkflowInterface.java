@@ -1,4 +1,4 @@
-package io.seoleir.engram.core.api.annotation;
+package io.seoleir.engram.api.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface WorkflowStateType {
-    long schemaVersion();
+public @interface WorkflowInterface {
+    String type();
 }

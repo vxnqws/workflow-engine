@@ -1,4 +1,4 @@
-package io.seoleir.engram.core.api.state;
+package io.seoleir.engram.api.state;
 
 import java.util.List;
 

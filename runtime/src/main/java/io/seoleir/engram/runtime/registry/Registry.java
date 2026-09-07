@@ -1,8 +1,8 @@
 package io.seoleir.engram.runtime.registry;
 
-import io.seoleir.engram.core.api.state.WorkflowState;
 
-import java.util.Optional;
+import io.seoleir.engram.api.state.WorkflowState;
+
 import java.util.Set;
 
 public interface Registry {

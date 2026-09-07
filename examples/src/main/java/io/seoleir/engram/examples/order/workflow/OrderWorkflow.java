@@ -1,8 +1,8 @@
 package io.seoleir.engram.examples.order.workflow;
 
-import io.seoleir.engram.core.api.annotation.OnEvent;
-import io.seoleir.engram.core.api.annotation.WorkflowInterface;
-import io.seoleir.engram.core.api.state.Decision;
+import io.seoleir.engram.api.annotation.OnEvent;
+import io.seoleir.engram.api.annotation.WorkflowInterface;
+import io.seoleir.engram.api.state.Decision;
 import io.seoleir.engram.examples.order.model.EventTypes;
 import io.seoleir.engram.examples.order.model.State;
 import io.seoleir.engram.examples.order.model.Status;

@@ -4,7 +4,7 @@ import io.seoleir.engram.backend.memory.InMemoryEventLog;
 import io.seoleir.engram.backend.memory.InMemoryStateStore;
 import io.seoleir.engram.client.EngramClient;
 import io.seoleir.engram.codeccbor.CborCodec;
-import io.seoleir.engram.core.internal.codec.StateCodec;
+import io.seoleir.engram.core.codec.StateCodec;
 import io.seoleir.engram.examples.order.model.EventTypes;
 import io.seoleir.engram.examples.order.model.State;
 import io.seoleir.engram.examples.order.payload.ChargeResult;
@@ -35,9 +35,9 @@ public class OrderDemo {
 
         System.out.println("=== Live execution ===");
 
-        run(engram, store, EventTypes.ORDER_PLACED, codec.encode(new OrderPlaced("order-1", "cust-7")));
-        run(engram, store, EventTypes.RESERVE_COMPLETED, codec.encode(new ReserveResult("r-88")));
-        run(engram, store, EventTypes.CHARGE_COMPLETED, codec.encode(new ChargeResult("p-7", 149_900L)));
+        run(engram, store, EventTypes.ORDER_PLACED, new OrderPlaced("order-1", "cust-7"));
+        run(engram, store, EventTypes.RESERVE_COMPLETED, new ReserveResult("r-88"));
+        run(engram, store, EventTypes.CHARGE_COMPLETED, new ChargeResult("p-7", 149_900L));
 
         State live = (State) store.load(WORKFLOW_ID).state();
 
@@ -57,7 +57,7 @@ public class OrderDemo {
                 .register(OrderWorkflow.class, new OrderWorkflow(), State.initial())
                 .build();
 
-        run(engram, store, "Noop", new byte[0]);
+        run(recoveredEngram, store, "Noop", new byte[0]);
 
         State restored = (State) freshStore.load(WORKFLOW_ID).state();
 
@@ -73,7 +73,7 @@ public class OrderDemo {
         }
     }
 
-    private static void run(EngramClient engramClient, StateStore store, String eventType, byte[] payload) {
+    private static void run(EngramClient engramClient, StateStore store, String eventType, Object payload) {
         List<String> commands = engramClient.handle(WORKFLOW_TYPE, WORKFLOW_ID, eventType, payload);
         var vs = store.load(WORKFLOW_ID);
         System.out.printf("seq=%d version=%d state=%s commands=%s%n",

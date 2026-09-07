@@ -1,6 +1,7 @@
 package io.seoleir.engram.client;
 
-import io.seoleir.engram.core.api.state.WorkflowState;
+
+import io.seoleir.engram.api.state.WorkflowState;
 
 import java.util.Objects;
 

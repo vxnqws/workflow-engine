@@ -1,10 +1,10 @@
 package io.seoleir.engram.runtime.adapter;
 
-import io.seoleir.engram.core.api.state.Decision;
-import io.seoleir.engram.core.api.state.WorkflowState;
-import io.seoleir.engram.core.internal.codec.StateCodec;
-import io.seoleir.engram.core.internal.decide.Decider;
-import io.seoleir.engram.core.internal.event.HistoryEvent;
+import io.seoleir.engram.api.state.Decision;
+import io.seoleir.engram.api.state.WorkflowState;
+import io.seoleir.engram.core.codec.StateCodec;
+import io.seoleir.engram.core.decide.Decider;
+import io.seoleir.engram.core.event.HistoryEvent;
 import io.seoleir.engram.runtime.exception.DeciderInvocationException;
 import io.seoleir.engram.runtime.registry.WorkflowDefinition;
 
